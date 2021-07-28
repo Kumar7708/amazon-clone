@@ -4,9 +4,17 @@ import Header from "./Header";
 import Home from "./Home";
 import Login from "./Login";
 import Checkout from "./Checkout";
+import Orders from "./Orders";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { auth } from "./firebase";
 import { useStateValue } from "./StateProvider";
+import Payment from "./Payment";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const promise = loadStripe(
+  "pk_test_51JHUvMSDlFtWyjwFzTTGUjhF0gaQIdOER45wVC3It65mtWGIVjvn2oQJyw7CyLFwUgm13iG3haT6yx6HAO1bqd7z00q6OmCJ4G"
+);
 
 function App() {
   const [, dispatch] = useStateValue();
@@ -29,6 +37,7 @@ function App() {
         });
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Router>
@@ -38,9 +47,21 @@ function App() {
             <Login />
           </Route>
 
+          <Route path="/orders">
+            <Header />
+            <Orders />
+          </Route>
+
           <Route path="/checkout">
             <Header />
             <Checkout />
+          </Route>
+
+          <Route path="/payment">
+            <Header />
+            <Elements stripe={promise}>
+              <Payment />
+            </Elements>
           </Route>
 
           <Route path="/">
